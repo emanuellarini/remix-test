@@ -27,13 +27,13 @@ export default function Index() {
           </a>
         </li>
         <li>
-          <a href="/todos">
-            Todos
+          <a href="/todos-with-a">
+            Todos With A
           </a>
         </li>
         <li>
-          <a href="/todos/todos-with-a">
-            Todos With A
+          <a href="/todos-with-a/todos/">
+            Todos
           </a>
         </li>
       </ul>

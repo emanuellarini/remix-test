@@ -1,11 +1,11 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 
 import { redirect, json } from "@remix-run/node";
-import { useLoaderData, useFetcher, Outlet } from "@remix-run/react";
+import { useLoaderData, useFetcher } from "@remix-run/react";
 import { useRef, useEffect, } from "react";
 
-import { postTodo, deleteTodo, getTodos, Todo } from '../models/todos'
-import { randomSleep } from '../utils';
+import { postTodo, deleteTodo, getTodos, Todo } from '../../models/todos'
+import { randomSleep } from '../../utils';
 
 type LoaderData = Awaited<{ todos: Todo[] }>;
 
@@ -98,8 +98,6 @@ export default function Todos() {
           </button>
         </fetcher.Form>
       </ul>
-
-      <Outlet />
     </div>
   );
 }
