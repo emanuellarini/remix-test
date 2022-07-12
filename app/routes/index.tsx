@@ -26,6 +26,16 @@ export default function Index() {
             Remix Docs
           </a>
         </li>
+        <li>
+          <a href="/todos">
+            Todos
+          </a>
+        </li>
+        <li>
+          <a href="/todos/todos-with-a">
+            Todos With A
+          </a>
+        </li>
       </ul>
     </div>
   );
