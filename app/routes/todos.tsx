@@ -1,31 +1,28 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 
 import { redirect, json } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, Outlet } from "@remix-run/react";
 import { useRef, useEffect, } from "react";
 
-import { postTodo, deleteTodo, getTodos, Todo } from '../../models/todos'
-import { randomSleep } from '../../utils';
+import type { TodoType } from '../models/todos';
+import { postTodo, deleteTodo, getTodos } from '../models/todos'
 
-type LoaderData = Awaited<{ todos: Todo[] }>;
+type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  await randomSleep();
-
   return json<LoaderData>({ todos: await getTodos() })
 }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const { _action, id, title  } = Object.fromEntries(formData)
-
-  await randomSleep();
+  const { _action, id, title } = Object.fromEntries(formData)
 
   if (_action === 'delete') {
     try {
+      // randomizing a failing request for you to see the optimistic in action!
       if (Math.random() > 0.5) throw new Error();
 
-      await deleteTodo(id);
+      await deleteTodo(Number(id));
 
       // redirects to nested route or main
       return redirect(request.headers.get("Referer") || '/todos');
@@ -35,7 +32,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   try {
-    await postTodo(title);
+    await postTodo(title.toString());
 
     // redirects to nested route or main
     return redirect(request.headers.get("Referer") || '/todos');
@@ -44,7 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 }
 
-const Todo = ({ todo }: { todo: Todo }) => {
+const Todo = ({ todo }: { todo: TodoType }) => {
   const fetcher = useFetcher();
 
   const isDeleting = fetcher.submission?.formData.get('id') === todo.id.toString()
@@ -67,8 +64,8 @@ export default function Todos() {
 
   const isAdding = fetcher.submission?.formData.get('_action') == 'create';
 
-  const formRef = useRef<HTMLFormElement | undefined>();
-  const titleRef = useRef<HTMLInputElement | undefined>();
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const titleRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     return () => {
@@ -98,6 +95,7 @@ export default function Todos() {
           </button>
         </fetcher.Form>
       </ul>
+      <Outlet />
     </div>
   );
 }

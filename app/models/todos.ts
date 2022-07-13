@@ -1,40 +1,31 @@
-export type Todo = { id: number; title: string }
+import { PrismaClient } from '@prisma/client'
 
-export const postTodo = async (title: string):  Promise<Todo> => {
-  const response = await fetch(`http://localhost:3001/todos`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8',
-    },
-    mode: 'cors',
-    body: JSON.stringify({
-      title
-    })
-  });
+export type TodoType = { id: number; title: string };
 
-  return await response.json();
-}
+const prisma = new PrismaClient();
+
+export const postTodo = (title: string): Promise<TodoType> => prisma.todo.create({
+  data: {
+    title
+  }
+});
 
 export const deleteTodo = async (id: number): Promise<boolean> => {
-  const response = await fetch(`http://localhost:3001/todos/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8',
-    },
-    mode: 'cors'
-  });
+  await prisma.todo.delete({
+    where: {
+      id
+    }
+  })
 
-  return await response.json();
+  return true;
 }
 
-export const getTodos = async (): Promise<Todo[]> => {
-  const response = await fetch(`http://localhost:3001/todos`, {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8',
-    },
-    mode: 'cors',
-  });
+export const getTodos = (): Promise<TodoType[]> => prisma.todo.findMany();
 
-  return await response.json();
-}
+export const getTodosWithA = (): Promise<TodoType[]> => prisma.todo.findMany({
+  where: {
+    title: {
+      contains: 'a'
+    }
+  }
+});

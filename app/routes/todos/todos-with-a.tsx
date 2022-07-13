@@ -1,17 +1,21 @@
 import type { LoaderFunction } from "@remix-run/node"; // or "@remix-run/cloudflare"
 
 import { json } from "@remix-run/node";
-import { useLoaderData, Outlet } from "@remix-run/react";
-import { getTodos, Todo } from '../models/todos';
+import { useLoaderData } from "@remix-run/react";
+import type { TodoType } from '../../models/todos';
+import { getTodosWithA } from '../../models/todos';
 
-type LoaderData = Awaited<{ todos: Todo[] }>;
-
+type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  const  todos = await getTodos();
+  const  todos = await getTodosWithA();
 
-  return json<LoaderData>({ todos: todos.filter(todo => todo.title.includes('a')) })
+  return json<LoaderData>({ todos })
 }
+
+export const headers = () => ({
+  'Cache-Control': 's-maxage: 300, stale-while-revalidate=600'
+})
 
 export default function TodosWithA () {
   const { todos } = useLoaderData<LoaderData>();
@@ -23,8 +27,6 @@ export default function TodosWithA () {
         {!todos?.length && 'No Items'}
         {todos?.map(todo => <li key={`with-a-${todo.id}`}>{todo.title}</li>)}
       </ul>
-
-      <Outlet />
     </div>
   );
 }
