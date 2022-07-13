@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async () => {
 }
 
 export const headers = () => ({
-  'Cache-Control': 's-maxage: 300, stale-while-revalidate=600'
+  'Cache-Control': 's-maxage=300, stale-while-revalidate=600'
 })
 
 export default function TodosWithA () {
