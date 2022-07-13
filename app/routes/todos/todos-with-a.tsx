@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node"; // or "@remix-run/cloudflare"
+import type { LoaderFunction, HeadersFunction } from "@remix-run/node"; // or "@remix-run/cloudflare"
 
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -10,11 +10,16 @@ type LoaderData = Awaited<{ todos: TodoType[] }>;
 export const loader: LoaderFunction = async () => {
   const  todos = await getTodosWithA();
 
-  return json<LoaderData>({ todos })
+  return json({
+    todos,
+    headers: {
+      'Cache-Control': 's-maxage=5, stale-while-revalidate=60'
+    }
+  })
 }
 
-export const headers = () => ({
-  'Cache-Control': 's-maxage=300, stale-while-revalidate=600'
+export const headers: HeadersFunction = ({ loaderHeaders }) => ({
+  'Cache-Control': loaderHeaders.get('Cache-Control') || ''
 })
 
 export default function TodosWithA () {
