@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async () => {
   return json({
     todos,
     headers: {
-      'Cache-Control': 's-maxage=5, stale-while-revalidate=60'
+      'cache-control': 's-maxage=5, stale-while-revalidate=60'
     }
   })
 }
@@ -38,9 +38,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 }
 
-
 export const headers: HeadersFunction = ({ loaderHeaders }) => ({
-  'Cache-Control': loaderHeaders.get('Cache-Control') || ''
+  'cache-control': loaderHeaders.get('cache-control') || ''
 })
 
 export default function TodosWithA () {

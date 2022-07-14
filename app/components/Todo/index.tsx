@@ -14,7 +14,7 @@ export const Todo = ({ todo, isOptimistic = false }: { todo: TodoType, isOptimis
   const deleteButton = !isOptimistic ?
     <fetcher.Form method="post">
       <input type="hidden" name="id" value={todo.id} />
-      <IconButton edge="end" aria-label="delete" type="submit">
+      <IconButton edge="end" aria-label="delete" type="submit" name="_action" value="delete">
         {hasFailed ? <ReplayIcon /> : <DeleteIcon />}
       </IconButton>
     </fetcher.Form>

@@ -1,6 +1,6 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 
-import { redirect, json } from "@remix-run/node";
+import { redirect, json, HeadersFunction } from "@remix-run/node";
 import { useLoaderData, useFetcher, Outlet } from "@remix-run/react";
 import { useRef, useEffect, } from "react";
 import { Add as PlusIcon } from '@mui/icons-material';
@@ -13,8 +13,17 @@ import { postTodo, deleteTodo, getTodos } from '../models/todos'
 type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  return json<LoaderData>({ todos: await getTodos() })
+  return json({
+    todos: await getTodos(),
+    headers: {
+      'cache-control': 's-maxage=5, stale-while-revalidate=60'
+    }
+  })
 }
+
+export const headers: HeadersFunction = ({ loaderHeaders }) => ({
+  'cache-control': loaderHeaders.get('cache-control') || ''
+})
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
