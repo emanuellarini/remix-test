@@ -3,7 +3,7 @@ import type { LoaderFunction, HeadersFunction } from "@remix-run/node"; // or "@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { TodoType } from '../../models/todos';
-import { getTodosWithA, deleteTodo } from '../../models/todos';
+import { getTodosWithA, deleteTodo } from "../../models/todos";
 import { Todo } from '../../components/Todo';
 import { Box, List, Typography } from "@mui/material";
 import { ActionFunction, redirect } from "@remix-run/node";
@@ -11,12 +11,9 @@ import { ActionFunction, redirect } from "@remix-run/node";
 type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  const  todos = await getTodosWithA();
-
-  return json({
-    todos,
+  return json({ todos: await getTodosWithA() }, {
     headers: {
-      'cache-control': 'public, s-maxage=5, stale-while-revalidate=10'
+      'cache-control': 's-maxage=5, stale-while-revalidate=55'
     }
   })
 }

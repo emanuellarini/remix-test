@@ -13,10 +13,9 @@ import { postTodo, deleteTodo, getTodos } from '../models/todos'
 type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  return json({
-    todos: await getTodos(),
+  return json({ todos: await getTodos() }, {
     headers: {
-      'cache-control': 'public, s-maxage=5, stale-while-revalidate=10'
+      'cache-control': 's-maxage=5, stale-while-revalidate=55'
     }
   })
 }
