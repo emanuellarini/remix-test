@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async () => {
   return json({
     todos: await getTodos(),
     headers: {
-      'cache-control': 's-maxage=5, stale-while-revalidate=60'
+      'cache-control': 'public, s-maxage=5, stale-while-revalidate=10'
     }
   })
 }
