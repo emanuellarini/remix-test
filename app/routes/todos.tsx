@@ -13,15 +13,11 @@ import { postTodo, deleteTodo, getTodos } from '../models/todos'
 type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  return json({ todos: await getTodos() }, {
-    headers: {
-      'cache-control': 's-maxage=60, stale-while-revalidate=1'
-    }
-  })
+  return json({ todos: await getTodos() })
 }
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => ({
-  'cache-control': loaderHeaders.get('cache-control') || ''
+export const headers: HeadersFunction = () => ({
+  'cache-control': 's-maxage=5, stale-while-revalidate=1'
 })
 
 export const action: ActionFunction = async ({ request }) => {

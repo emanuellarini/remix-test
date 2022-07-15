@@ -11,11 +11,7 @@ import { ActionFunction, redirect } from "@remix-run/node";
 type LoaderData = Awaited<{ todos: TodoType[] }>;
 
 export const loader: LoaderFunction = async () => {
-  return json({ todos: await getTodosWithA() }, {
-    headers: {
-      'cache-control': 's-maxage=60, stale-while-revalidate=1'
-    }
-  })
+  return json({ todos: await getTodosWithA() })
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -35,8 +31,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 }
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => ({
-  'cache-control': loaderHeaders.get('cache-control') || ''
+export const headers: HeadersFunction = () => ({
+  'cache-control': 's-maxage=5, stale-while-revalidate=1'
 })
 
 export default function TodosWithA () {
