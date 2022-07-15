@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request }) => {
     await deleteTodo(Number(id));
 
     // redirects to nested route or main
-    return redirect(request.headers.get("Referer") || '/todos');
+    return redirect(request.headers.get("Referer") || '/todos/todos-with-a');
   } catch (e) {
     return { error: true }
   }

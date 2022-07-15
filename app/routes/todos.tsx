@@ -81,7 +81,13 @@ export default function Index () {
         {isAdding && <Todo todo={{ title: fetcher.submission?.formData.get('title')?.toString() || '', id: 0 }} isOptimistic />}
       </List>
 
-      <Box method="post" ref={formRef} component={fetcher.Form} sx={{ display: 'flex', maxWidth: 360, justifyContent: 'space-between' }}>
+      <Box
+        component={fetcher.Form}
+        method="post"
+        replace
+        ref={formRef}
+        sx={{ display: 'flex', maxWidth: 360, justifyContent: 'space-between' }}
+      >
         <TextField type="text" name="title" ref={titleRef} size="small" fullWidth />
         <Button
           type="submit"
