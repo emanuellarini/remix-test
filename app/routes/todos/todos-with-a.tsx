@@ -5,7 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { TodoType } from '../../models/todos';
 import { getTodosWithA, deleteTodo } from "../../models/todos";
 import { Todo } from '../../components/Todo';
-import { Box, List, Typography } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import { ActionFunction, redirect } from "@remix-run/node";
 
 type LoaderData = Awaited<{ todos: TodoType[] }>;
@@ -13,7 +13,7 @@ type LoaderData = Awaited<{ todos: TodoType[] }>;
 export const loader: LoaderFunction = async () => {
   return json({ todos: await getTodosWithA() }, {
     headers: {
-      'cache-control': 's-maxage=5, stale-while-revalidate=55'
+      'cache-control': 's-maxage=60, stale-while-revalidate=1'
     }
   })
 }
@@ -43,12 +43,14 @@ export default function TodosWithA () {
   const { todos } = useLoaderData<LoaderData>();
 
   return (
-    <Box>
+    <>
       <Typography variant="h4" component="h1">Todos Containing Letter A</Typography>
-      {!todos.length && <Typography>No Items</Typography>}
+
+      {!todos.length && <Typography variant="subtitle1" component="p" sx={{ mt: 2 }}>No Items Found</Typography>}
+
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {todos.map(todo => <Todo todo={todo} key={todo.id} />)}
       </List>
-    </Box>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from "react";
 import {
   AppBar,
   Box,
@@ -15,9 +15,9 @@ import {
   LinearProgress
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTransition } from "@remix-run/react";
+import { useFetchers } from "@remix-run/react";
 
-interface Props {
+interface LayoutProps {
   /**
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
@@ -36,13 +36,19 @@ const navItems = [{
   link: '/todos/todos-with-a'
 }];
 
-export const Layout: React.FC<Props> = ({ children, window }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, window }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const transition = useTransition();
+  const fetchers = useFetchers();
 
-  const handleDrawerToggle = () => {
+  const isDoingAction = useMemo(() => {
+    return fetchers.some(fetcher => fetcher.state === 'submitting' || fetcher.state === 'loading');
+  }, [fetchers]);
+
+  console.log(fetchers)
+
+  const handleDrawerToggle = useCallback(() => {
     setMobileOpen(!mobileOpen);
-  };
+  }, [mobileOpen]);
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -112,7 +118,7 @@ export const Layout: React.FC<Props> = ({ children, window }) => {
       </Box>
 
 
-      {transition.state === 'loading' && (
+      {isDoingAction && (
         <LinearProgress
           color="secondary"
           sx={{

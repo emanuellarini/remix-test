@@ -15,7 +15,7 @@ type LoaderData = Awaited<{ todos: TodoType[] }>;
 export const loader: LoaderFunction = async () => {
   return json({ todos: await getTodos() }, {
     headers: {
-      'cache-control': 's-maxage=5, stale-while-revalidate=55'
+      'cache-control': 's-maxage=60, stale-while-revalidate=1'
     }
   })
 }
@@ -71,10 +71,11 @@ export default function Index () {
   }, [isAdding]);
 
   return (
-    <Box>
+    <>
       <Typography variant="h4" component="h1">Todos</Typography>
 
-      {!todos.length && <Typography>No Items</Typography>}
+      {!todos.length && <Typography variant="subtitle1" component="p" sx={{ mt: 2 }}>No Items Found</Typography>}
+
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {todos.map(todo => <Todo todo={todo} key={todo.id} />)}
         {isAdding && <Todo todo={{ title: fetcher.submission?.formData.get('title')?.toString() || '', id: 0 }} isOptimistic />}
@@ -98,6 +99,6 @@ export default function Index () {
       <Box sx={{ mt: 6 }}>
         <Outlet />
       </Box>
-    </Box>
+    </>
   );
 }
